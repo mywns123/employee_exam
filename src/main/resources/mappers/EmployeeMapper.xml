@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="employee_exam.mappers.EmployeeMapper">
+		
+	<resultMap type="Employee" id="resEmployee">
+		<id property="empNo" column="empNo" />
+		<result property="empName" column="empName"/>
+		<result property="salary" column="salary"/>
+		
+		<association property="title" javaType="Title">
+			<result property="titleNo" column="titleNo"/>			
+			<result property="titleName" column="titleName"/>			
+		</association>
+					
+		<association property="manager" javaType="Employee">
+			<result property="empNo" column="manager"/>		
+		</association>			
+		<association property="dept" javaType="Department">
+			<result property="deptNo" column="dept"/>		
+		</association>		
+	</resultMap>
+
+	<select id="selectEmployeeByAll" resultMap="resEmployee">
+		select empNo, empName, titleNo, titleName, manager, salary, dept from employeet
+	</select>
+	
+	<select id="selectbyId" resultMap="resEmployee" >
+		select empNo, empName, titleNo, titleName, manager, salary, dept from employeet
+		 where empNo = #{empNo}
+	</select>
+	
+	<insert id="insertEmployee" parameterType="Employee" >
+		insert
+		  into Employee(empNo, empName, title, manager, salary, dept)
+	    values(#{empNo}, #{empName}, #{title.titleNo}, #{manager.empNo}, #{salary}, #{dept.deptNo})
+	</insert>
+	
+	<update id="updateEmployee">
+		update employee 
+		   set empName=#{empName}, title=#{title.titleNo}, manager=#{manager.empNo}, salary=#{salary}, dept=#{dept.deptNo}
+		 where empNo = #{empNo}
+	
+	</update>
+
+	<delete id="deleteEmployee">
+		delete
+		  from employee
+		 where empNo = #{empNo}
+	</delete>
+
+
+</mapper>
